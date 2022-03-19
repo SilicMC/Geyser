@@ -54,9 +54,10 @@ public class BedrockActionTranslator extends PacketTranslator<PlayerActionPacket
     public void translate(GeyserSession session, PlayerActionPacket packet) {
         SessionPlayerEntity entity = session.getPlayerEntity();
 
-        // Send book update before any player action
+        // Send book & sign update before any player action
         if (packet.getAction() != PlayerActionType.RESPAWN) {
             session.getBookEditCache().checkForSend();
+            session.getSignUpdateCache().checkForSend();
         }
 
         Vector3i vector = packet.getBlockPosition();

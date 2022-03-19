@@ -62,8 +62,9 @@ public class BedrockMovePlayerTranslator extends PacketTranslator<MovePlayerPack
 
         session.setLastMovementTimestamp(System.currentTimeMillis());
 
-        // Send book update before the player moves
+        // Send book & sign update before the player moves
         session.getBookEditCache().checkForSend();
+        session.getSignUpdateCache().checkForSend();
 
         // Ignore movement packets until Bedrock's position matches the teleported position
         if (session.getUnconfirmedTeleport() != null) {

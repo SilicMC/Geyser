@@ -190,7 +190,7 @@ public class GeyserSession implements GeyserConnection, CommandSender {
     private final LodestoneCache lodestoneCache;
     private final PistonCache pistonCache;
     private final PreferencesCache preferencesCache;
-    private final SkullCache skullCache;
+    private final SignUpdateCache signUpdateCache;
     private final TagCache tagCache;
     private final WorldCache worldCache;
 
@@ -553,7 +553,7 @@ public class GeyserSession implements GeyserConnection, CommandSender {
         this.lodestoneCache = new LodestoneCache();
         this.pistonCache = new PistonCache(this);
         this.preferencesCache = new PreferencesCache(this);
-        this.skullCache = new SkullCache(this);
+        this.signUpdateCache = new SignUpdateCache(this);
         this.tagCache = new TagCache();
         this.worldCache = new WorldCache(this);
 
@@ -1038,6 +1038,10 @@ public class GeyserSession implements GeyserConnection, CommandSender {
     }
 
     public void disconnect(String reason) {
+        // Send book & sign update before player disconnect
+        this.getBookEditCache().checkForSend();
+        this.getSignUpdateCache().checkForSend();
+
         if (!closed) {
             loggedIn = false;
             if (downstream != null) {

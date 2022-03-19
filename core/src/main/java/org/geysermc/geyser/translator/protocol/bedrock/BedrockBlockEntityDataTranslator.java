@@ -44,8 +44,6 @@ public class BedrockBlockEntityDataTranslator extends PacketTranslator<BlockEnti
         String id = tag.getString("id");
         if (id.equals("Sign")) {
             String text = tag.getString("Text");
-            // Note: as of 1.18.30, only one packet is sent from Bedrock when the sign is finished.
-            // Previous versions did not have this behavior.
             StringBuilder newMessage = new StringBuilder();
             // While Bedrock's sign lines are one string, Java's is an array of each line
             // (Initialized all with empty strings because it complains about null)
@@ -100,10 +98,8 @@ public class BedrockBlockEntityDataTranslator extends PacketTranslator<BlockEnti
             }
             // Put the final line on since it isn't done in the for loop
             if (iterator < lines.length) lines[iterator] = newMessage.toString();
-            Vector3i pos = Vector3i.from(tag.getInt("x"), tag.getInt("y"), tag.getInt("z"));
-            ServerboundSignUpdatePacket signUpdatePacket = new ServerboundSignUpdatePacket(pos, lines);
-            session.sendDownstreamPacket(signUpdatePacket);
-
+            Position pos = new Position(tag.getInt("x"), tag.getInt("y"), tag.getInt("z"));
+            session.getSignUpdateCache().setPacket(new ServerboundSignUpdatePacket(pos, lines));
         } else if (id.equals("JigsawBlock")) {
             // Client has just sent a jigsaw block update
             Vector3i pos = Vector3i.from(tag.getInt("x"), tag.getInt("y"), tag.getInt("z"));

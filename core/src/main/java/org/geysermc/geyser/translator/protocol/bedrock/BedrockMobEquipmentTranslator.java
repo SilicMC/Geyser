@@ -50,8 +50,9 @@ public class BedrockMobEquipmentTranslator extends PacketTranslator<MobEquipment
             return;
         }
 
-        // Send book update before switching hotbar slot
+        // Send book & sign update before switching hotbar slot
         session.getBookEditCache().checkForSend();
+        session.getSignUpdateCache().checkForSend();
 
         GeyserItemStack oldItem = session.getPlayerInventory().getItemInHand();
         session.getPlayerInventory().setHeldItemSlot(newSlot);
